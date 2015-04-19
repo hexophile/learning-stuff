@@ -1,12 +1,16 @@
 # learning-stuff/Database
 Two-way list database
 
-main.cpp	    - create objects, initialises etc.
+main.cpp - create objects, initialises etc.
 
-interface.h   - declarations of interface functions
+interface.h - interface functions (declarations)
 
 interface.cpp - definitions of the above
 
-db_class.h    - declarations of database methods
+database.h - database methods (main managment)
 
-db_class.cpp  - definitions of database methods and more
+database.cpp - definitions of database methods
+
+management.h - contains secondary grade management (like changing value of fields)
+
+managment.cpp - definitions ^
