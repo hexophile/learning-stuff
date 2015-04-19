@@ -31,6 +31,8 @@ void Interface::showMenu()
 	while( "" != menuPos[loopCounter] )
 	{
 		std::cout << menuPos[loopCounter] << "\n";
+/* I had to use std::cout because printf() doesn't working with structures */
+
 		loopCounter++;
 	}
 }

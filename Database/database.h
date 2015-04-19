@@ -1,5 +1,5 @@
-#ifndef DB_CLASS_H
-#define DB_CLASS_H
+#ifndef DATABASE_H
+#define DATABASE_H
 
 class Database
 {
@@ -11,41 +11,45 @@ class Database
 		Database( Database& );
 
 		~Database();
-// End of The Big Three
 
-		struct element;		// Main structure, contains data of current row of database and pointers to prev/next row.
-		unsigned int count;	// Count number of elements.
+/* Main structure, contains all data of row in database */
+		struct element;
 
-		element *head;		// The beggining of list
-		element *tail;		// The ending of list	
+/* Amout of rows in database */
+		unsigned int count;
 
-		
-		void printElement( element* );	// Prints element
-		void printAllElements();		// Prints all database
-		
-		void pushElFront( char*, short, char* );	// Push element on head of list
-		void pushElBack( char*, short, char* );		// Push element on tail of list
+/* head and tail of list */
+		element *head;
+		element *tail;
 
-		void popElFront();	// Pop(remove) element on head of list
-		void popElBack();	// Pop(remove) element on head of list
+/* Printing */
+		void printElement( element* );	// Prints arg element
+		void printAllElements();	// Prints all rows
 
-		void insertElBefore( char*, short, char*, element* );	// Insert before/
-		void insertElAfter( char*, short, char*, element* );		// after pointed element
-		
-		void insertElBefore( char*, short, char*, unsigned int );// Insert before/
-		void insertElAfter( char*, short, char*, unsigned int );// after pointed ID in list
+/* Push element on head/tail of list */
+		void pushElFront( char*, short, char* );
+		void pushElBack( char*, short, char* );
 
-		void removeElement( element* );				// Removing pointed element
-	//	void removeElement( unsigned int );			// by ID
+/* Pop element on head/tail of list */
+		void popElFront();
+		void popElBack();
 
+/* Insert before/after pointed element */
+		void insertElBefore( char*, short, char*, element* );
+		void insertElAfter( char*, short, char*, element* );
+
+/* Remove element */
+		void removeElement( element* );
+
+/* Searching */
 		element findElement( element* );	// Find by all
 		element findElement( unsigned int );// Find by ID
 	//	element findElement( char* );		// Find by name
 		element findElement( short );		// Find by value
 //		element findElement( char* );		// Find by description
 
-// End of declarations
-};
+/* End of declarations */
+}; /* End of class declaration(?) */
 
 
-#endif // DB_CLASS_H
+#endif /* DATABASE_H */

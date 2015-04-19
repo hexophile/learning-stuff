@@ -13,7 +13,6 @@ Database::~Database()
 	while( count ) popElFront();
 }
 
-/* End of The Big Three */
 
 struct Database::element
 {
@@ -21,9 +20,9 @@ struct Database::element
 	element *prev;
 	
 	unsigned int ID;
-	char *name;//[20];
+	char *name;
 	short value;
-	char *desc;//[30];
+	char *desc;
 
 	bool operator==( const element *&rEl )
 	{
@@ -32,18 +31,19 @@ struct Database::element
 		else
 			return false;
 	}
-}; /* End of two-way list definition */
+}; /* End of two-way linked list definition */
 
-const Database::element NULL_ELEMENT = { NULL, NULL, 0, 0, 0, 0 }; // NULL for element type return in function
+/* NULL element for errors in searching functions */
+const Database::element NULL_ELEMENT = { NULL, NULL, 0, 0, 0, 0 };
 
 /* End of database stuff */
 
-/* Start of database management stuff */
+/* Start of database 1st grade management stuff */
 
 void Database::printElement( element *tempElement )
 {
 	printf( "[ID] %d\n[Name] %s\n[Value] %d\n[Description] %s\n", tempElement->ID, tempElement->name, tempElement->value, tempElement->desc );
-} // End of element printing procedure
+} /* End of element printing procedure */
 
 void Database::printAllElements()
 {
@@ -54,7 +54,7 @@ void Database::printAllElements()
 		printf( "[ID] %d\n[Name] %s\n[Value] %d\n[Description] %s\n\n", tempElement->ID, tempElement->name, tempElement->value, tempElement->desc );
 		tempElement = tempElement->next;
 	}
-} // End of database printing procedure
+} /* End of database printing procedure */
 
 void Database::pushElFront( char *name, short value, char *desc )
 {
@@ -71,7 +71,7 @@ void Database::pushElFront( char *name, short value, char *desc )
 
 	if( tempElement->next ) tempElement->next->prev = tempElement;
 	else tail = tempElement;
-} // End of element front pushing procedure
+} /* End of element front pushing procedure */
 
 void Database::pushElBack( char *name, short value, char *desc )
 {
@@ -86,17 +86,17 @@ void Database::pushElBack( char *name, short value, char *desc )
 
 	if( tempElement->prev) tempElement->prev->next = tempElement;
 	else head = tempElement;
-} // End of element back pushing procedure
+} /* End of element back pushing procedure */
 
 void Database::popElFront()
 {
 	if( count ) removeElement(head);
-}
+} /* End of element front pop procedure */
 
 void Database::popElBack()
 {
 	if( count ) removeElement(tail);
-}
+} /* End of element back pop procedure */
 
 void Database::insertElBefore( char *name, short value, char *desc, element *tempElement )
 {
@@ -116,7 +116,7 @@ void Database::insertElBefore( char *name, short value, char *desc, element *tem
 		tempElement->prev->next = buffElement;
 		tempElement->prev = buffElement;
 	}	
-} // End of insert before element
+} /* End of insert before element procedure */
 
 void Database::insertElAfter( char *name, short value, char *desc, element *tempElement )
 {
@@ -136,15 +136,7 @@ void Database::insertElAfter( char *name, short value, char *desc, element *temp
 		tempElement->next->prev = buffElement;
 		tempElement->next = buffElement;
 	}
-} // End of insert after element
-
-void Database::insertElBefore( char*, short, char*, unsigned int )
-{
-}
-
-void Database::insertElAfter( char*, short, char*, unsigned int )
-{
-}
+} /* End of insert after element procedure */
 
 void Database::removeElement( element *tempElement )
 {
@@ -156,12 +148,8 @@ void Database::removeElement( element *tempElement )
 	else tail = tempElement->prev;
 
 	delete tempElement;
-}
-/*
-void Database::removeElement( unsigned int ID )
-{
-}
-*/
+} /* End of remove procedure */
+
 Database::element Database::findElement( element *buffElement )
 {
 	element *tempElement = head;
@@ -174,7 +162,7 @@ Database::element Database::findElement( element *buffElement )
 		tempElement = tempElement->next;
 	}
 	return NULL_ELEMENT;
-}
+} /* End of search by element function */
 
 Database::element Database::findElement( unsigned int sID )
 {
@@ -188,12 +176,12 @@ Database::element Database::findElement( unsigned int sID )
 		tempElement = tempElement->next;
 	}
 	return NULL_ELEMENT;
-}
+} /* End of search by ID function */
 /*
 element Database::findElement( char *sName )
 {
 	return 0;
-}
+} 
 */
 Database::element Database::findElement( short sValue )
 {
@@ -207,4 +195,4 @@ Database::element Database::findElement( short sValue )
 		tempElement = tempElement->next;
 	}
 	return NULL_ELEMENT;
-}
+} /* End of search by value function */
