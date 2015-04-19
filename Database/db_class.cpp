@@ -34,8 +34,7 @@ struct Database::element
 	}
 }; /* End of two-way list definition */
 
-const Database::element NULL_ELEMENT = { NULL, NULL, 0, 0, 0, 0 };
-// NULL for element type return in function
+const Database::element NULL_ELEMENT = { NULL, NULL, 0, 0, 0, 0 }; // NULL for element type return in function
 
 /* End of database stuff */
 
