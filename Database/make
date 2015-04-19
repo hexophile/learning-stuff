@@ -1,2 +1,2 @@
-g++ main.cpp db_class.h db_class.cpp -o database
+g++ main.cpp database.h database.cpp -o db.out
 # Queen of simplicity

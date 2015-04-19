@@ -1,5 +1,5 @@
 //#include "interface.h"
-#include "db_class.h"
+#include "database.h"
 
 main()
 {

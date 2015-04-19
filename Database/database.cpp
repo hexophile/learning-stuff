@@ -1,4 +1,4 @@
-#include "db_class.h"
+#include "database.h"
 #include "stdio.h"
 
 Database::Database()
