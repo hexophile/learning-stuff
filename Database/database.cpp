@@ -13,7 +13,6 @@ Database::~Database()
 	while( count ) popElFront();
 }
 
-
 struct Database::element
 {
 	element *next;
@@ -49,20 +48,29 @@ void Database::printAllElements()
 {
 	element *tempElement = head;
 
-	while(tempElement)
+	if( tempElement )
 	{
-		printf( "[ID] %d\n[Name] %s\n[Value] %d\n[Description] %s\n\n", tempElement->ID, tempElement->name, tempElement->value, tempElement->desc );
-		tempElement = tempElement->next;
+		while( tempElement ) // or wothout ->next, dunno
+		{
+			printf( "[ID] %d\n[Name] %s\n[Value] %d\n[Description] %s\n\n", tempElement->ID, tempElement->name, tempElement->value, tempElement->desc );
+			if( tempElement->next )
+				tempElement = tempElement->next;
+			else
+				break;
+		}
+	}
+	else
+	{
+		printf( "No elements in database." );
 	}
 } /* End of database printing procedure */
 
 void Database::pushElFront( char *name, short value, char *desc )
 {
-	element *tempElement = new element;
+	element *tempElement;// = new element;
+	tempElement = new element;
 
-//	tempElement = new element;
-
-	tempElement->ID = count++;
+	tempElement->ID = ++count;
 	tempElement->name = name;
 	tempElement->value = value;
 	tempElement->desc = desc;
@@ -75,27 +83,49 @@ void Database::pushElFront( char *name, short value, char *desc )
 
 void Database::pushElBack( char *name, short value, char *desc )
 {
-	element *tempElement = new element;
+	element *tempElement;
+	tempElement = new element;
 
-	tempElement->ID = count++;
+	tempElement->ID = ++count;
 	tempElement->name = name;
 	tempElement->value = value;
 	tempElement->desc = desc;
 
 	tail = tempElement;
 
-	if( tempElement->prev) tempElement->prev->next = tempElement;
+	if( tempElement->prev ) tempElement->prev->next = tempElement;
 	else head = tempElement;
 } /* End of element back pushing procedure */
 
+
+
+void Database::pushByFile( unsigned int ID, char *name, short value, char *desc )
+{
+	element *tempElement = new element;
+
+//	tempElement = new element;
+
+	tempElement->ID = ID;
+	tempElement->name = name;
+	tempElement->value = value;
+	tempElement->desc = desc;
+
+	head = tempElement;
+
+	if( tempElement->next ) tempElement->next->prev = tempElement;
+	else tail = tempElement;
+} /* End of pushing from file procedure */
+
+
+
 void Database::popElFront()
 {
-	if( count ) removeElement(head);
+	if( count ) removeElement( head );
 } /* End of element front pop procedure */
 
 void Database::popElBack()
 {
-	if( count ) removeElement(tail);
+	if( count ) removeElement( tail );
 } /* End of element back pop procedure */
 
 void Database::insertElBefore( char *name, short value, char *desc, element *tempElement )

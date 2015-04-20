@@ -3,18 +3,32 @@
 
 main()
 {
-	char *test = "test!";
+/*
+	Interface Interface;
+
+	Interface.showMenu(0);
 	
-	Database Baza;
+*/
 
-	Baza.pushElFront( test, 3, test );
+	Database DatabaseObj;
 
-//	Baza.printElement(Baza.head);
+	/*
+	short hVar = 255;
+	while( hVar )
+	{
+		DatabaseObj.pushElFront( "test", hVar, "test" );
 
-	Baza.printAllElements();
+		hVar--;
+	}*/
 
+	DatabaseObj.pushElFront( "test", 2, "descr" );
+	DatabaseObj.pushElFront( "test2", 2, "descr2" );
+//	I don't know why it doesn't work ^\(' - ' )/^
 
-//	*test = getchar();
+	DatabaseObj.printAllElements();
 
 	return 0;
 }
+/*
+ * Deadline uœwiêca œrodki.
+ */

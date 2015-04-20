@@ -14,7 +14,7 @@ class Interface
 		~Interface();
 
 
-		void showMenu();
+		void showMenu( unsigned char );
 
 };
 

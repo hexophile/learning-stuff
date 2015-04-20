@@ -6,6 +6,7 @@ class Database
 	private:
 
 	public:
+
 		Database();
 
 		Database( Database& );
@@ -29,6 +30,8 @@ class Database
 /* Push element on head/tail of list */
 		void pushElFront( char*, short, char* );
 		void pushElBack( char*, short, char* );
+/* Reading from file procedure */
+		void pushByFile( unsigned int, char*, short, char* );
 
 /* Pop element on head/tail of list */
 		void popElFront();
