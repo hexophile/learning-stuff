@@ -37,7 +37,10 @@ void Klasa::pushFront( int x )
 
 	tempElement->pole = x;
 
+	tempElement->next = head;
 	head = tempElement;
+
+	count++;
 
 	if( tempElement->next )
 		tempElement->next->prev = tempElement;
@@ -53,7 +56,10 @@ void Klasa::pushBack( int x )
 
 	tempElement->pole = x;
 
+	tempElement->prev = tempElement;
 	tail = tempElement;
+
+	count++;
 
 	if( tempElement->prev )
 		tempElement->prev->next = tempElement;

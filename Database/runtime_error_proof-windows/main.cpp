@@ -5,8 +5,7 @@ main()
 	Klasa Obiekt;
 
 	Obiekt.pushFront(4);
-	Obiekt.pushFront(22);
-	Obiekt.pushBack(100);
+	Obiekt.pushFront(6);
 
 	Obiekt.showElements();
 

@@ -1,2 +1,0 @@
-g++ main.cpp database.h database.cpp -o db.out -std=c++11
-# Queen of simplicity

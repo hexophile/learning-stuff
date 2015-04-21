@@ -75,10 +75,13 @@ void Database::pushElFront( char *name, short value, char *desc )
 	tempElement->value = value;
 	tempElement->desc = desc;
 
+	tempElement->next = head;
 	head = tempElement;
 
-	if( tempElement->next ) tempElement->next->prev = tempElement;
-	else tail = tempElement;
+	if( tempElement->next )
+		tempElement->next->prev = tempElement;
+	else
+		tail = tempElement;
 } /* End of element front pushing procedure */
 
 void Database::pushElBack( char *name, short value, char *desc )
@@ -91,10 +94,13 @@ void Database::pushElBack( char *name, short value, char *desc )
 	tempElement->value = value;
 	tempElement->desc = desc;
 
+	tempElement->prev = tail;
 	tail = tempElement;
 
-	if( tempElement->prev ) tempElement->prev->next = tempElement;
-	else head = tempElement;
+	if( tempElement->prev )
+		tempElement->prev->next = tempElement;
+	else
+		head = tempElement;
 } /* End of element back pushing procedure */
 
 
@@ -112,8 +118,10 @@ void Database::pushByFile( unsigned int ID, char *name, short value, char *desc 
 
 	head = tempElement;
 
-	if( tempElement->next ) tempElement->next->prev = tempElement;
-	else tail = tempElement;
+	if( tempElement->next )
+		tempElement->next->prev = tempElement;
+	else
+		tail = tempElement;
 } /* End of pushing from file procedure */
 
 
