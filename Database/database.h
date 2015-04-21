@@ -16,7 +16,7 @@ class Database
 /* Main structure, contains all data of row in database */
 		struct element;
 
-/* Amout of rows in database */
+/* Amount of rows in database */
 		unsigned int count;
 
 /* head and tail of list */

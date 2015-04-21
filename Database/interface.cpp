@@ -55,7 +55,7 @@ void Interface::showMenu( unsigned char menuVar)
 					case 1:
 					{
 						Database Database;
-						readDatabaseFromFile(Database, "databaza"); // Ya, rly
+						readDatabaseFromFile(Database, "databaza_test"); // Ya, rly
 					} break;
 					default:
 					{
