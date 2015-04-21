@@ -12,3 +12,6 @@ main()
 
 	return 0;
 }
+/*
+g++ main.cpp class.h class.cpp -o out.exe
+*/
