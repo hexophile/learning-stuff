@@ -4,7 +4,7 @@ uses zadanie3_unit;
 // Variables
 var
    globalID:integer;
-   Database:array[LOW..HIGH-1] of TPerson;
+   Database:TDatabase;
 
 { End of declarations }
 
