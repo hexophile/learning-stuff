@@ -16,7 +16,8 @@ type
             name:string;    // Main information
             state:boolean;  // Infomraiton whether record exists
     End; // Main database object structure
-
+    
+    TDatabase = array[LOW..HIGH-1] of TPerson;
 // Functions
 function FindObject( var Database:array of TPerson; tabID:integer ):TPerson;
 function ObjectExists( var Database:array of TPerson; tabID:integer ):boolean;
