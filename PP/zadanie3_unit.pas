@@ -97,9 +97,9 @@ Begin
 			if( next = LOW-1 ) then
 			begin
 				writeln('End of data.');
-		end
-		else
-			Swap( Database[i], Database[next] );
+			end
+			else
+				Swap( Database[i], Database[next] );
 		end;
 	end;
 End; { End of ClearEmptyRecords }
