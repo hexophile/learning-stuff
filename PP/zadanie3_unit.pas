@@ -39,11 +39,11 @@ function ModifyObject( obj:TObject ):TObject;
 //function MergeDatabases( var ParentDatabase:TDatabasePtr, var ChildDatabase:TDatabasePtr ):TDatabasePtr; // For extended
 
 { Procedures, most of them will turn into functions after adding error management }
-    { Object }
+	{ Object }
 procedure AddObject( var Database:array of TObject );
 procedure RemoveObject( var Database:array of TObject; tabID:int );      
 procedure ShowObject( obj:TObject );                  
-    { Database }
+	{ Database }
 procedure InitializeDatabase( var Database:array of TObject );
 procedure ShowDatabase( var Database:array of TObject );
 procedure ReIDDatabase( var Database:array of TObject );
@@ -55,12 +55,12 @@ procedure SortDatabase( var Database:array of TObject; order:boolean; by:byte );
 
 implementation
 {
-    List of internal functions:            
-    function FindNextExistent( var array of TObject, int ):int;
-    function FindRealHighValue( var array of TObject ):int;
+	List of internal functions:            
+	function FindNextExistent( var array of TObject, int ):int;
+	function FindRealHighValue( var array of TObject ):int;
 
-    procedure Swap( var TObject, var TObject );
-    procedure ClearEmptyRecords( var array of TObject );
+	procedure Swap( var TObject, var TObject );
+	procedure ClearEmptyRecords( var array of TObject );
 }
 
 { Internal functions and procedures }
@@ -87,7 +87,7 @@ End; { End of FindNextExistent }
 
 procedure ClearEmptyRecords( var Database:array of TObject ); // It's supposed to remove 'empty' records in database.
 var
-   i,next:int;
+	i,next:int;
 Begin
 	for i := LOW to HIGH do
 	begin
@@ -118,7 +118,7 @@ Begin
 	if( i = HIGH ) then
 		FindRealHighValue := -1;
 {
-    Need error management,
+	Need error management,
 }
 End; { End of FindRealHighValue }
 { End of internal functions and procedures }
@@ -158,25 +158,25 @@ End; { End of FindObject }
 
 function ModifyObject( obj:TObject ):TObject; // Function returns modified object
 Begin
-    writeln( 'Old ID = ':1, obj.id );
-    write( 'New ID = ':1 );
-    readln( obj.id );
-    writeln( 'Old name: ':1, obj.name );
-    write( 'New name: ':1 );
-    readln( obj.name );
+	writeln( 'Old ID = ':1, obj.id );
+	write( 'New ID = ':1 );
+	readln( obj.id );
+	writeln( 'Old name: ':1, obj.name );
+	write( 'New name: ':1 );
+	readln( obj.name );
 
 	ModifyObject := obj;
 {
-    TODO in extended:
-    multiple modification, independence from definition of object,
-    secure forms
+	TODO in extended:
+	multiple modification, independence from definition of object,
+	secure forms
 }
 End; { End of ModifyObject }
 
 { Export procedures }
 procedure AddObject( var Database:array of TObject ); // Procedure adds new record to database
 var
-    i:int;
+	i:int;
 Begin
 	i := FindRealHighValue( Database );
 	if( i > 0 ) then
@@ -248,8 +248,8 @@ Begin // true = asc, false = desc || 0 = by ID, 1 = by name
 	writeln( Database[0].name, order, by ); // TODO, simply quicksort
 { sorting after removing non-existent elements }
 {
-    TODO in extended:
-    introsort
+	TODO in extended:
+	introsort
 }
 End; { End of SortDatabase }
 
@@ -257,14 +257,14 @@ Begin
 
 End.
 {
-    TODO in extended:
-    error management unit,
-    sort state,
+	TODO in extended:
+	error management unit,
+	sort state,
 
-    TODO in extended+:
-    finishing additional database management such as saving db to file,
+	TODO in extended+:
+	finishing additional database management such as saving db to file,
 
-    TODO in VERY extended+:
-    split type and functions/procs definitions to units
-    split certain functions with algorithms to different units
+	TODO in VERY extended+:
+	split type and functions/procs definitions to units
+	split certain functions with algorithms to different units
 }
