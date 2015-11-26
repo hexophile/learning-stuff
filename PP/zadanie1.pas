@@ -1,37 +1,37 @@
-Program zadanie1;               // Dziala nawet bez tego.
+Program zadanie1;
 
 var
-plik:text;                      // Deklaracja zmiennej plikowej
-tab:array[0..9] of integer;     // Deklaracje tablic
-tab2:array[0..9] of char;       // Uzywamy tylko cyfr, nie trzeba wiekszego typu danych
-i:integer;                      // Deklaracja zmiennej pomocniczej
+plik:text;
+tab:array[0..9] of integer;
+tab2:array[0..9] of char;
+i:integer;
 
 begin
-    for i := 0 to 9 do          // Pierwsza petla, wypelnia tablice tab[]
+    for i := 0 to 9 do
     begin
         tab[i] := i;
     end;
     
-    Assign( plik, 'plik.txt' ); // Przypisanie pliku do zmiennej
-    rewrite( plik );            // Otworz nowy plik pod zmienna 'plik'
+    Assign( plik, 'plik.txt' );
+    rewrite( plik );
     
-    repeat                      // Druga petla, zapisuje zawartosc tablicy tab[] do pliku
+    repeat
         writeln( plik, tab[i] );
         i := i - 1;
     until(i = 0);
     
-    close( plik );              // Zamkniecie pliku
+    close( plik );
     
-    assign( plik, 'plik.txt' ); // Drugie przypisanie
-    reset( plik );              // Otworz plik i przesun wskaznik na poczatek
+    assign( plik, 'plik.txt' );
+    reset( plik );
     
-    while( not eof(plik) ) do   // Lub i < 10
-    begin                       // Trzecia petla, odczytuje zawartosc pliku i wpisuje do tablicy tab2[]
+    while( not eof(plik) ) do
+    begin
         readln( plik, tab2[i] );
         writeln( tab2[i] );
         i := i + 1;
     end;
     
-    close( plik );              // Zamkniecie pliku
+    close( plik );
     readln;
 end.
