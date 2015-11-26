@@ -1,6 +1,8 @@
 unit zadanie3_unit;
 
-interface
+interface      
+
+uses crt, sysutils, zadanie3_err_mgmt;
  
 { Constants }
 const
@@ -10,32 +12,40 @@ const
 	TSTATE_FALSE = false;
 { Structures }
 type
+    int = integer;
+
     TState = boolean;
 
 	TPerson = record
-		id:integer;     // ID number
+		id:int;     // ID number
 		name:string;    // Main information
 		state:TState;  // Information whether record exists
 	End; // Main database object structure   
 	TPersonPtr = ^TPerson;
 
 	TDatabase = array[LOW..HIGH] of TPerson;
+    TDatabasePtr = ^TDatabase;
+
 
 { Functions }
 function ObjectState( var Database:array of TPerson; id:integer ):TState;
 function FindObject( var Database:array of TPerson; name:string ):TPersonPtr;
 function ModifyObject( obj:TPerson ):TPerson;
 
+//function CreateDatabase():TDatabasePtr; // For extended
+//function DeleteDatabase():int; // :TError;
+
 { Procedures }
 procedure InitializeDatabase( var Database:array of TPerson );
 procedure AddObject( var Database:array of TPerson );
-procedure RemoveObject( var Database:array of TPerson; tabID:integer );
+procedure RemoveObject( var Database:array of TPerson; tabID:int );
 procedure ShowDatabase( var Database:array of TPerson );
 procedure SortDatabase( var Database:array of TPerson; order:boolean; by:byte );
 
-implementation        
+//procedure LoadDatabase(); // For extended
+//procedure SaveDatabase( var Database:array of TPerson ); // For extended
 
-uses crt, sysutils;
+implementation
 
 { Internal functions and procedures }
 procedure Swap( var element:TPerson; var element2:TPerson ); // Swaps two elements in database
@@ -47,7 +57,7 @@ Begin
     element2 := swapVar;
 End; { End of Swap }
 
-function FindNextExistent( var Database:array of TPerson; id:integer ):integer; // Finds next element that isn't empty after certain ID
+function FindNextExistent( var Database:array of TPerson; id:int ):int; // Finds next element that isn't empty after certain ID
 Begin
     while( not Database[id].state and ( id <= HIGH )) do
     begin
@@ -61,7 +71,7 @@ End; { End of FindNextExistent }
 
 procedure ClearEmptyRecords( var Database:array of TPerson ); // It's supposed to remove 'empty' records in database.
 var
-   i,next:integer;
+   i,next:int;
 Begin
 	for i := LOW to HIGH do
 	begin
@@ -78,9 +88,9 @@ Begin
 	end;
 End; { End of ClearEmptyRecords }
 
-function FindRealHighValue( var Database:array of TPerson ):integer; // Finds max ID of data in database.
+function FindRealHighValue( var Database:array of TPerson ):int; // Finds max ID of data in database.
 var
-	i:integer;
+	i:int;
 Begin
 	ClearEmptyRecords( Database );
 
@@ -98,14 +108,14 @@ End; { End of FindRealHighValue }
 { End of internal functions and procedures }
 
 { Export functions }
-function ObjectState( var Database:array of TPerson; id:integer ):TState; // Function returns if object exists
+function ObjectState( var Database:array of TPerson; id:int ):TState; // Function returns if object exists
 Begin
 	ObjectState := Database[id].state;
 End; { End of ObjectExists }
 
 function FindObject( var Database:array of TPerson; name:string ):TPersonPtr; // Function has to find record and return pointer to it
 var
-	i:integer;
+	i:int;
 Begin
 	i := LOW;
 
@@ -150,7 +160,7 @@ End; { End of ModifyObject }
 { Export procedures }
 procedure InitializeDatabase( var Database:array of TPerson ); // Before you start working on database, it has to be empty
 var
-	i,id:integer;
+	i,id:int;
 Begin
 	id := 1;
 	for i := LOW to HIGH do
@@ -165,7 +175,7 @@ End; { End of InitializeDatabase }
 
 procedure AddObject( var Database:array of TPerson ); // Procedure adds new record to database
 var
-    i:integer;
+    i:int;
 Begin
     i := FindRealHighValue( Database );
     if( i > 0 ) then
@@ -182,14 +192,14 @@ Begin
     end;
 End; { End of AddObject }
 
-procedure RemoveObject( var Database:array of TPerson; tabID:integer ); // Procedure removes object from database
+procedure RemoveObject( var Database:array of TPerson; tabID:int ); // Procedure removes object from database
 Begin
 	Database[tabID].state := false;
 End; { End of RemoveObject }
 
 procedure ShowDatabase( var Database:array of TPerson ); // Procedure shows all existent records
 var
-	i:integer;
+	i:int;
 Begin
 	i := LOW;
 	while( ( i <> HIGH ) and Database[i].state ) do
