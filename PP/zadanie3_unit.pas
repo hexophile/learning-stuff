@@ -6,10 +6,12 @@ uses crt, sysutils, zadanie3_err_mgmt;
  
 { Constants }
 const
-	LOW = 1;	// Starting number in database
-	HIGH = 100000;	// Ending number
-			// LOW and HIGH are numbers that define primary key of database
+	TRUE_LOW = 0;       // This is for table name record, it's true starting number
+	LOW = TRUE_LOW+1;	// Starting number in database
+	HIGH = 100000;		// Ending number
+				// LOW and HIGH are numbers that define primary key of database
 	TSTATE_FALSE = false;
+	TSTATE_TRUE = true;
 { Structures }
 type
     int = integer;
@@ -23,7 +25,7 @@ type
 	End; // Main database object structure   
 	TPersonPtr = ^TPerson;
 
-	TDatabase = array[LOW..HIGH] of TPerson;
+	TDatabase = array[TRUE_LOW..HIGH] of TPerson;
     TDatabasePtr = ^TDatabase;
 
 
@@ -40,13 +42,23 @@ function ModifyObject( obj:TPerson ):TPerson;
 procedure InitializeDatabase( var Database:array of TPerson );
 procedure AddObject( var Database:array of TPerson );
 procedure RemoveObject( var Database:array of TPerson; tabID:int );
-procedure ShowDatabase( var Database:array of TPerson );
+procedure ShowDatabase( var Database:array of TPerson );                      
+procedure ReIDDatabase( var Database:array of TPerson );
 procedure SortDatabase( var Database:array of TPerson; order:boolean; by:byte );
 
 //procedure LoadDatabase( var Database:TDatabasePtr ); // For extended
 //procedure SaveDatabase( var Database:array of TPerson ); // For extended
 
+
 implementation
+{
+    List of internal functions:            
+    function FindNextExistent( var array of TPerson, int ):int;
+    function FindRealHighValue( var array of TPerson ):int;
+
+    procedure Swap( var TPerson, var TPerson );
+    procedure ClearEmptyRecords( var array of TPerson );
+}
 
 { Internal functions and procedures }
 procedure Swap( var element:TPerson; var element2:TPerson ); // Swaps two elements in database
@@ -107,6 +119,7 @@ Begin
 }
 End; { End of FindRealHighValue }
 { End of internal functions and procedures }
+
 
 { Export functions }
 function ObjectState( var Database:array of TPerson; id:int ):TState; // Function returns if object exists
@@ -170,8 +183,10 @@ Begin
 		Database[i].state := false;
 		id := id + 1;
 	end;
-	Database[LOW].name := #0'Table name';
-	Database[LOW].state := True;
+
+	Database[TRUE_LOW].id := 0;
+	Database[TRUE_LOW].name := #0'Table name';
+	Database[TRUE_LOW].state := TSTATE_TRUE;
 End; { End of InitializeDatabase }
 
 procedure AddObject( var Database:array of TPerson ); // Procedure adds new record to database
@@ -202,17 +217,33 @@ procedure ShowDatabase( var Database:array of TPerson ); // Procedure shows all 
 var
 	i:int;
 Begin
-	i := LOW;
-	while( ( i <> HIGH ) and Database[i].state ) do
+	for i := LOW to FindRealHighValue( Database ) do
+    begin              
+		writeln( '':1, Database[i].id, ' ', Database[i].name );
+    end;
+{   while( i <= FindRealHighValue( Database ) ) do
 	begin
 		writeln( '':1, Database[i].id, ' ', Database[i].name );
 		i := i - 1;
-	end;
+	end;   }
 End; { End of ShowDatabase }
+
+procedure ReIDDatabase( var Database:array of TPerson ); // Procedure has to re-ID whole database
+var // It is recommended to re-ID database after sorting and removing empties
+	i,id:int;
+Begin
+	id := 1;
+	for i := LOW to HIGH do
+	begin
+		Database[i].id := id;
+		id := id + 1;
+	end;
+End; { End of ReIDDatabase }
 
 procedure SortDatabase( var Database:array of TPerson; order:boolean; by:byte ); // Procedure has to sort database
 Begin // true = asc, false = desc || 0 = by ID, 1 = by name
 	writeln( order, by ); // TODO, simply quicksort
+{ sorting after removing non-existent elements }
 {
     TODO in extended:
     introsort
