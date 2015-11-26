@@ -33,16 +33,17 @@ function FindObject( var Database:array of TPerson; name:string ):TPersonPtr;
 function ModifyObject( obj:TPerson ):TPerson;
 
 //function CreateDatabase():TDatabasePtr; // For extended
-//function DeleteDatabase():int; // :TError;
+//function DeleteDatabase():int; // :TError; // For extended
+//function MergeDatabases( var ParentDatabase:TDatabasePtr, var ChildDatabase:TDatabasePtr ):TDatabasePtr; // For extended
 
-{ Procedures }
+{ Procedures, most of them will turn into functions after adding error management }
 procedure InitializeDatabase( var Database:array of TPerson );
 procedure AddObject( var Database:array of TPerson );
 procedure RemoveObject( var Database:array of TPerson; tabID:int );
 procedure ShowDatabase( var Database:array of TPerson );
 procedure SortDatabase( var Database:array of TPerson; order:boolean; by:byte );
 
-//procedure LoadDatabase(); // For extended
+//procedure LoadDatabase( var Database:TDatabasePtr ); // For extended
 //procedure SaveDatabase( var Database:array of TPerson ); // For extended
 
 implementation
@@ -225,4 +226,11 @@ End.
     TODO in extended:
     error management unit,
     sort state,
+
+    TODO in extended+:
+    finishing additional database management such as saving db to file,
+
+    TODO in VERY extended+:
+    split type and functions/procs definitions to units
+    split certain functions with algorithms to different units
 }
