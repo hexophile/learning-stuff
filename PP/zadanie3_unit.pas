@@ -66,23 +66,23 @@ implementation
 { Internal functions and procedures }
 procedure Swap( var element:TObject; var element2:TObject ); // Swaps two elements in database
 var
-    swapVar:TObject;
+	swapVar:TObject;
 Begin
-    swapVar := element;
-    element := element2;
-    element2 := swapVar;
+	swapVar := element;
+	element := element2;
+	element2 := swapVar;
 End; { End of Swap }
 
 function FindNextExistent( var Database:array of TObject; id:int ):int; // Finds next element that isn't empty after certain ID
 Begin
-    while( not Database[id].state and ( id <= HIGH )) do
-    begin
-        id := id + 1;
-    end;
-    if( id > HIGH ) then
-        FindNextExistent := LOW-1
-    else
-        FindNextExistent := id;
+	while( not Database[id].state and ( id <= HIGH )) do
+	begin
+		id := id + 1;
+	end;
+	if( id > HIGH ) then
+		FindNextExistent := LOW-1
+	else
+		FindNextExistent := id;
 End; { End of FindNextExistent }
 
 procedure ClearEmptyRecords( var Database:array of TObject ); // It's supposed to remove 'empty' records in database.
@@ -115,14 +115,13 @@ Begin
 		if( not Database[i].state ) then FindRealHighValue := i - 1;
 	end;
 
-    if( i = HIGH ) then
-        FindRealHighValue := -1;
+	if( i = HIGH ) then
+		FindRealHighValue := -1;
 {
     Need error management,
 }
 End; { End of FindRealHighValue }
 { End of internal functions and procedures }
-
 
 { Export functions }
 function ObjectState( var Database:array of TObject; id:int ):TState; // Function returns if object exists
@@ -179,19 +178,19 @@ procedure AddObject( var Database:array of TObject ); // Procedure adds new reco
 var
     i:int;
 Begin
-    i := FindRealHighValue( Database );
-    if( i > 0 ) then
-    begin
-        write( 'New ID: ':1 );
-        readln( Database[i+1].id );
-        write( 'New name: ':1 );
-        readln( Database[i+1].name );
-    end
-    else if( i = -1 ) then
-    begin
-        writeln('Database is full.');
-        readln;
-    end;
+	i := FindRealHighValue( Database );
+	if( i > 0 ) then
+	begin
+		write( 'New ID: ':1 );
+		readln( Database[i+1].id );
+		write( 'New name: ':1 );
+		readln( Database[i+1].name );
+	end
+	else if( i = -1 ) then
+	begin
+		writeln('Database is full.');
+		readln;
+	end;
 End; { End of AddObject }            
 
 procedure RemoveObject( var Database:array of TObject; tabID:int ); // Procedure removes object from database
@@ -201,8 +200,8 @@ End; { End of RemoveObject }
 
 procedure ShowObject( obj:TObject );
 Begin
-    writeln( 'ID = ', obj.ID );
-    writeln( 'Name: ', obj.name );
+	writeln( 'ID = ', obj.ID );
+	writeln( 'Name: ', obj.name );
 End; { End of ShowObject }        
 
 procedure InitializeDatabase( var Database:array of TObject ); // Before you start working on database, it has to be empty
