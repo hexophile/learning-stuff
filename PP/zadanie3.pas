@@ -24,6 +24,7 @@ Begin
 		writeln( '[4] Sort database' );
 		writeln( '[5] Re-ID database' );
 		writeln( '[6] Show free space' );
+		writeln( '[8] fill with numberz' );
 		writeln( '[0] Exit' );
 		readln( choice );
 
@@ -119,6 +120,12 @@ Begin
 			writeln( 'Free space in database = ', FreeSpace( Database ) );
 			readln;
 		end;
+        8:
+        begin                    
+            tempCont.strVal := '';
+            for choice := 1 to 10 do
+                AddObject( Database, random(1000), tempCont );
+        end;
 		end; { End of main case }
 	end; { End of main loop }
 End; { End of MainMenu }
