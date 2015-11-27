@@ -357,9 +357,6 @@ Begin
 
 		end;
 	end;
-	writeln('__actualPos:',actualPosition);
-	writeln('__localLOW=',localLOW);
-	writeln('__localHIGH=',localHIGH);
 
 	Swap( Database[actualPosition], Database[localHIGH] );
 
@@ -370,8 +367,7 @@ End;
 procedure SortDatabase( var Database:array of TObject; order:bool; column:int ); { Procedure has to sort the database }
 var
 	localLOW, localHIGH, i, position:uint;
-	test:int;
-	temp:array[LOW..HIGH] of int;
+	temp:array[TRUE_LOW..HIGH] of int;
 Begin
 	ClearEmptyRecords( Database );
 
@@ -379,11 +375,10 @@ Begin
 	localLOW := LOW;
 	localHIGH := FindRealHighValue( Database );
 
-	position := Split( Database, localLOW, localHIGH, order, column );
-	
-	while ( i >= 0 ) do
-	begin
-		ShowDatabase( Database );
+{	while ( i >= 0 ) do
+	begin}
+	repeat
+		position := Split( Database, localLOW, localHIGH, order, column );
 
 		if ( position - 1 > localLOW ) then
 		begin
@@ -398,20 +393,10 @@ Begin
 		end;
 
 		localHIGH := temp[PreDec(i, 1)];
-		writeln('i=',i,' temp=',temp[i]);
 		localLOW := temp[PreDec(i, 1)];
-		writeln('i=',i,' temp=',temp[i]);
 
-		writeln('_pDec localHIGH=',localHIGH);
-		writeln('_pDec localLOW=',localLOW);
-		write('i=',i,' temp=');
-		for test := 0 to i+1 do
-			write(temp[test],',');
-		readln;
-
-		position := Split( Database, localLOW, localHIGH, order, column );
-	end;
-{ sorting after removing non-existent elements }
+	until ( i < 0 );
+{	end;}
 {
 	TODO in extended:
 	introsort
@@ -436,4 +421,3 @@ End.
 	split type and functions/procs definitions to units
 	split certain functions with algorithms to different units
 }
-
