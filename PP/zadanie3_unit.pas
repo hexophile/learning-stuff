@@ -2,7 +2,7 @@ unit zadanie3_unit;
 
 interface
 
-uses crt, sysutils, zadanie3_err_mgmt;
+uses zadanie3_err_mgmt;
 
 { Constants }
 const
@@ -15,7 +15,7 @@ const
 
 	STRING_SIZE = 32;
 
-	DEFAULT_TEXT_POSITION = 10;
+	DEFAULT_TEXT_POSITION = 12;
 
 { Structures }
 type
@@ -36,7 +36,7 @@ type
 	
 	TObject = record
 		id:uint;
-        content:TContent;
+		content:TContent;
 		state:TState;
 	End; { Main database object structure }	
 
@@ -45,12 +45,15 @@ type
 	TDatabase = array[TRUE_LOW..HIGH] of TObject;
 	TDatabasePtr = ^TDatabase;
 
+{
+	TODO: Need database status check, I.e. variables containing whether database has empty records or was changed
+}
 
 { Functions }
-function ObjectState( var Database:array of TObject; id:int ):TState;
+function ObjectState( var Database:array of TObject; id:uint ):TState;
 function FindObject( var Database:array of TObject; content:TContent ):TObjectPtr;
 function ModifyObject( obj:TObject ):TObject;
-function FreeSpace( var Database:array of TObject ):int;
+function FreeSpace( var Database:array of TObject ):uint;
 
 {function CreateDatabase():TDatabasePtr; For extended }
 {function DeleteDatabase():TError; For extended }
@@ -58,8 +61,8 @@ function FreeSpace( var Database:array of TObject ):int;
 
 { Procedures, most of them will turn into functions after adding error management }
 	{ Object }
-procedure AddObject( var Database:array of TObject );
-procedure RemoveObject( var Database:array of TObject; tabID:int );
+procedure AddObject( var Database:array of TObject; id:uint; cont:TContent );
+procedure RemoveObject( var Database:array of TObject; tabID:uint );
 procedure ShowObject( obj:TObject );
 	{ Database }
 procedure InitializeDatabase( var Database:array of TObject );
@@ -95,14 +98,12 @@ End; { End of Swap }
 
 function FindNextExistent( var Database:array of TObject; id:int ):int; { Finds next element that isnt empty after certain ID }
 Begin
-	while( not Database[id].state and ( id <= HIGH )) do
+	while ( not ( Database[id].state = TSTATE_TRUE ) and ( id <= HIGH ) ) do
 	begin
 		id := id + 1;
 	end;
-	if( id > HIGH ) then
-		FindNextExistent := LOW-1
-	else
-		FindNextExistent := id;
+	
+	FindNextExistent := id;
 End; { End of FindNextExistent }
 
 procedure ClearEmptyRecords( var Database:array of TObject ); { Its supposed to remove 'empty' records in database. }
@@ -111,12 +112,12 @@ var
 Begin
 	for i := LOW to HIGH do
 	begin
-		if not Database[i].state then
+		if not ( Database[i].state = TSTATE_TRUE ) then
 		begin
 			next := FindNextExistent( Database, i );
-			if( next = LOW-1 ) then
+			if ( next > HIGH ) then
 			begin
-				writeln('End of data.');
+				exit;
 			end
 			else
 				Swap( Database[i], Database[next] );
@@ -128,15 +129,14 @@ function FindRealHighValue( var Database:array of TObject ):int; { Finds max ID 
 var
 	i:int;
 Begin
+	FindRealHighValue := 0;
+
 	ClearEmptyRecords( Database );
 
 	for i := LOW to HIGH do
 	begin
-		if( not Database[i].state ) then FindRealHighValue := i - 1;
+		if ( Database[i].state = TSTATE_TRUE ) then FindRealHighValue := i;
 	end;
-
-	if( i = HIGH ) then
-		FindRealHighValue := -1;
 {
 	Need error management,
 }
@@ -147,20 +147,20 @@ End; { End of FindRealHighValue }
 
 { ######################################## Export functions ######################################## }
 
-function ObjectState( var Database:array of TObject; id:int ):TState; { Function returns if object exists or something else }
+function ObjectState( var Database:array of TObject; id:uint ):TState; { Function returns if object exists or something else }
 Begin
 	ObjectState := Database[id].state;
 End; { End of ObjectExists }
 
 function FindObject( var Database:array of TObject; content:TContent ):TObjectPtr; { Function has to find record and return pointer to it }
 var
-	i:int;
+	i:uint;
 Begin
 	i := LOW;
 
-	while( not ( Database[i].content.strVal = content.strVal ) ) do { Pretty primitive, but working. TODO for extended }
+	while ( not ( Database[i].content.strVal = content.strVal ) ) do { Pretty primitive, but working. TODO for extended }
 	begin
-		if( HIGH = i ) then
+		if ( HIGH = i ) then
 		begin
 			FindObject := nil;
 			exit;
@@ -169,7 +169,7 @@ Begin
 		i := i + 1;
 	end;
 
-	if( ObjectState( Database, i ) = TSTATE_FALSE ) then { Yeah, no comment, poor as hell }
+	if ( ObjectState( Database, i ) = TSTATE_FALSE ) then { Yeah, no comment, poor as hell }
 		FindObject := nil
 	else
 		FindObject := @Database[i];
@@ -196,34 +196,34 @@ Begin
 }
 End; { End of ModifyObject }
 
-function FreeSpace( var Database:array of TObject ):int; { Function returns amount of free space in the database }
+function FreeSpace( var Database:array of TObject ):uint; { Function returns amount of free space in the database }
 Begin
 	FreeSpace := HIGH - FindRealHighValue( Database );
 End;
 
 { ######################################## Export procedures ######################################## }
 
-procedure AddObject( var Database:array of TObject ); { Procedure adds new record to the database }
+procedure AddObject( var Database:array of TObject; id:uint; cont:TContent ); { Procedure adds new record to the database }
 var
-	i:int;
+	i:uint;
 Begin
-	i := FindRealHighValue( Database );
+	i := FindRealHighValue( Database ) + 1;
 
-	if( i > 0 ) then
+	if ( ( i > 0 ) and ( i < HIGH ) ) then
 	begin
-		write( 'New ID: ':DEFAULT_TEXT_POSITION );
-		readln( Database[i+1].id );
-		write( 'New name: ':DEFAULT_TEXT_POSITION );
-		readln( Database[i+1].content.strVal );
+		Database[i].id := id;
+		Database[i].content := cont;
+		Database[i].state := TSTATE_TRUE;
+		Database[TRUE_LOW].id := Database[TRUE_LOW].id + 1;
 	end
-	else if( i = -1 ) then
+	else if ( i = HIGH ) then
 	begin
 		writeln('Database is full.');
 		readln;
 	end;
 End; { End of AddObject }
 
-procedure RemoveObject( var Database:array of TObject; tabID:int ); { Procedure removes object from the database }
+procedure RemoveObject( var Database:array of TObject; tabID:uint ); { Procedure removes object from the database }
 Begin
 	Database[tabID].state := false;
 End; { End of RemoveObject }
@@ -236,15 +236,12 @@ End; { End of ShowObject }
 
 procedure InitializeDatabase( var Database:array of TObject ); { Before you start working on the database, it has to be empty }
 var
-	i,id:int;
+	i:int;
 Begin
-	id := 1;
-
 	for i := LOW to HIGH do
 	begin
-		Database[i].id := id;
-		Database[i].state := false;
-		id := id + 1;
+		Database[i].id := i;
+		Database[i].state := TSTATE_FALSE;
 	end;
 
 	Database[TRUE_LOW].id := 0;
@@ -256,9 +253,17 @@ procedure ShowDatabase( var Database:array of TObject ); { Procedure shows all e
 var
 	i:int;
 Begin
-	for i := LOW to FindRealHighValue( Database ) do
+	if ( FindRealHighValue( Database ) = 0 ) then
 	begin
-		ShowObject( Database[i] );
+		writeln( 'Database is empty.' );
+		exit;
+	end
+	else
+	begin
+		for i := LOW to FindRealHighValue( Database ) do
+		begin
+			ShowObject( Database[i] );
+		end;
 	end;
 End; { End of ShowDatabase }
 
@@ -276,9 +281,7 @@ Begin
 End; { End of ReIDDatabase }
 
 { ######################################## Sorting internal functions ######################################## }
-
-{ ######################################## Sorting ######################################## }
-function Split( var Database:array of TObject; localLOW, localHIGH:int; var order:bool; var column:int ):int;
+function Split( var Database:array of TObject; localLOW, localHIGH:uint; var order:bool; var column:int ):int;
 var { order - true is asc, false is desc }
 	i, actualPosition:int;
 Begin
@@ -289,19 +292,19 @@ Begin
 
 	for i := localLOW to localHIGH - 1 do
 	begin
-		if( order ) then
+		if ( order ) then
 		begin
-			if( ( Database[i].id > Database[localHIGH].id ) and ( column = 0 ) ) then
+			if ( ( Database[i].id > Database[localHIGH].id ) and ( column = 0 ) ) then
 			begin
 				Swap( Database[i], Database[actualPosition] );
 				actualPosition := actualPosition + 1;
 			end;
-			{ else if ( ( Database[i].content.strVal > Database[localHIGH] ) and ( column = 1 ) ) then
+			{ else if ( ( Database[i].content.strVal > Database[localHIGH] ) ) then
 			I need there an algorithm for the strings. }
 		end
 		else
 		begin
-			if( ( Database[i].id < Database[localHIGH].id ) and ( column = 0 ) ) then
+			if ( ( Database[i].id < Database[localHIGH].id ) and ( column = 0 ) ) then
 			begin
 				Swap( Database[i], Database[actualPosition] );
 				actualPosition := actualPosition + 1;
@@ -315,23 +318,41 @@ Begin
 	Split := actualPosition;
 End;
 
+{ ######################################## Sorting ######################################## }
 procedure SortDatabase( var Database:array of TObject; order:bool; column:int ); { Procedure has to sort the database }
 var
-	localLOW, localHIGH, i:int;
+	localLOW, localHIGH, i, position:uint;
 	temp:array[LOW..HIGH] of int;
 Begin
+	ClearEmptyRecords( Database );
 
-{	localLOW := LOW;
-	localHIGH := HIGH;
+	i := 0;
+	temp[i] := LOW;
+	temp[i+1] := FindRealHighValue( Database );
+	i := i + 2;
 
-	while( i >= 0 ) do
+	while ( i >= 0 ) do
 	begin
+		localLOW := temp[i];
+		localHIGH := temp[i+1];
+		i := i - 2;
 
-		localLOW := Split( Database, localLOW, localHIGH, order, column );
-		localLOW := localLOW + 1;
+		position := Split( Database, localLOW, localHIGH, order, column );
+
+		if ( position - 1 > localLOW ) then
+		begin
+			temp[i] := localLOW;
+			temp[i+1] := position - 1;
+			i := i + 2;
+		end;
+		
+		if ( position + 1 < localHIGH ) then
+		begin
+			temp[i] := position + 1;
+			temp[i+1] := localHIGH;
+			i := i + 2;
+		end;
 	end;
-}
-
 { sorting after removing non-existent elements }
 {
 	TODO in extended:
@@ -339,6 +360,7 @@ Begin
 }
 End; { End of SortDatabase }
 
+{ ######################################## EOF ######################################## }
 Begin
 
 End.
@@ -348,10 +370,11 @@ End.
 	sort state,
 
 	TODO in extended+:
-	finishing additional database management such as saving db to file,
+	exporting database,
+	merging databases,
+	exporting/importing records,
 
 	TODO in VERY extended+:
 	split type and functions/procs definitions to units
 	split certain functions with algorithms to different units
 }
-
