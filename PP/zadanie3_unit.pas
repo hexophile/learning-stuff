@@ -13,9 +13,11 @@ const
 	TSTATE_FALSE = false;
 	TSTATE_TRUE = true;
 
-	STRING_SIZE = 32;
+	HORIZONTAL_CHAR_CODE = 196; { 205 }
+	VERTICAL_CHAR_CODE = 179; { 186 }
 
-	DEFAULT_TEXT_POSITION = 12;
+	DEFAULT_STRING_SIZE = 32;
+	DEFAULT_TEXT_POSITION = 10;
 
 { Structures }
 type
@@ -29,10 +31,10 @@ type
 
 	TContent = record
 	case content:TContentUnion of
-		strVal: ( strVal:string[STRING_SIZE] );
+		strVal: ( strVal:string[DEFAULT_STRING_SIZE] );
 		intVal: ( intVal:int );
 		statVal: ( statVal:TState );
-	end;
+	End;
 	
 	TObject = record
 		id:uint;
@@ -41,6 +43,11 @@ type
 	End; { Main database object structure }	
 
 	TObjectPtr = ^TObject;
+
+{	operator = ( lArg, rArg:^TObject ) res:bool;
+	Begin	
+		
+	End;}
 
 	TDatabase = array[TRUE_LOW..HIGH] of TObject;
 	TDatabasePtr = ^TDatabase;
@@ -87,10 +94,40 @@ implementation
 
 { ######################################## Internal functions ######################################## }
 
+function PostInc( var x:int; y:int ):int;
+Begin
+	PostInc := x;
+	x := x + y;
+End;
+
+function PreInc( var x:int; y:int ):int;
+Begin
+	x := x + y;
+	PreInc := x;
+End;
+
+function PostDec( var x:int; y:int ):int;
+Begin
+	PostDec := x;
+	x := x - y;
+End;
+
+function PreDec( var x:int; y:int ):int;
+Begin
+	x := x - y;
+	PreDec := x;
+End;
+
 procedure Swap( var element:TObject; var element2:TObject ); { Swaps two elements in database }
 var
 	swapVar:TObject;
+	elementPtr, elementPtr2:TObjectPtr;
 Begin
+	elementPtr := @element;
+	elementPtr2 := @element2;
+	if ( elementPtr = elementPtr2 ) then
+		exit;
+
 	swapVar := element;
 	element := element2;
 	element2 := swapVar;
@@ -100,7 +137,7 @@ function FindNextExistent( var Database:array of TObject; id:int ):int; { Finds 
 Begin
 	while ( not ( Database[id].state = TSTATE_TRUE ) and ( id <= HIGH ) ) do
 	begin
-		id := id + 1;
+		Inc(id);
 	end;
 	
 	FindNextExistent := id;
@@ -108,13 +145,14 @@ End; { End of FindNextExistent }
 
 procedure ClearEmptyRecords( var Database:array of TObject ); { Its supposed to remove 'empty' records in database. }
 var
-	i,next:int;
+	i, next:int;
 Begin
 	for i := LOW to HIGH do
 	begin
 		if not ( Database[i].state = TSTATE_TRUE ) then
 		begin
 			next := FindNextExistent( Database, i );
+
 			if ( next > HIGH ) then
 			begin
 				exit;
@@ -166,7 +204,7 @@ Begin
 			exit;
 		end;
 
-		i := i + 1;
+		Inc(i);
 	end;
 
 	if ( ObjectState( Database, i ) = TSTATE_FALSE ) then { Yeah, no comment, poor as hell }
@@ -229,9 +267,15 @@ Begin
 End; { End of RemoveObject }
 
 procedure ShowObject( obj:TObject );
+var
+	i:int;
 Begin
 	writeln( 'ID = ':DEFAULT_TEXT_POSITION, obj.ID );
-	writeln( 'Name: ':DEFAULT_TEXT_POSITION, obj.content.strVal );
+	writeln( 'Content: ':DEFAULT_TEXT_POSITION, obj.content.strVal ); {+DEFAULT_TEXT_POSITION}
+
+	for i := 0 to DEFAULT_STRING_SIZE + DEFAULT_TEXT_POSITION do { DEF_STR * 2 + DEF_TEXT + 1 }
+		write( char(HORIZONTAL_CHAR_CODE) );
+	writeln;
 End; { End of ShowObject }
 
 procedure InitializeDatabase( var Database:array of TObject ); { Before you start working on the database, it has to be empty }
@@ -276,42 +320,46 @@ Begin
 	for i := LOW to HIGH do
 	begin
 		Database[i].id := id;
-		id := id + 1;
+		Inc(id);
 	end;
 End; { End of ReIDDatabase }
 
 { ######################################## Sorting internal functions ######################################## }
-function Split( var Database:array of TObject; localLOW, localHIGH:uint; var order:bool; var column:int ):int;
-var { order - true is asc, false is desc }
+function Split( var Database:array of TObject; localLOW, localHIGH:uint; order:bool; var column:int ):int;
+var
 	i, actualPosition:int;
 Begin
 	i := ( localLOW + localHIGH ) div 2;
+
 	Swap( Database[localHIGH], Database[i] );
 	
 	actualPosition := localLOW;
 
-	for i := localLOW to localHIGH - 1 do
+	for i := localLOW  to localHIGH - 1 do
 	begin
 		if ( order ) then
 		begin
-			if ( ( Database[i].id > Database[localHIGH].id ) and ( column = 0 ) ) then
+			if ( Database[i].id < Database[localHIGH].id ) then
 			begin
 				Swap( Database[i], Database[actualPosition] );
-				actualPosition := actualPosition + 1;
+				PostInc(actualPosition, 1);
 			end;
 			{ else if ( ( Database[i].content.strVal > Database[localHIGH] ) ) then
 			I need there an algorithm for the strings. }
 		end
 		else
 		begin
-			if ( ( Database[i].id < Database[localHIGH].id ) and ( column = 0 ) ) then
+			if ( Database[i].id > Database[localHIGH].id ) then
 			begin
 				Swap( Database[i], Database[actualPosition] );
-				actualPosition := actualPosition + 1;
+				PostInc(actualPosition, 1);
 			end;
 
 		end;
 	end;
+	writeln('__actualPos:',actualPosition);
+	writeln('__localLOW=',localLOW);
+	writeln('__localHIGH=',localHIGH);
 
 	Swap( Database[actualPosition], Database[localHIGH] );
 
@@ -322,36 +370,46 @@ End;
 procedure SortDatabase( var Database:array of TObject; order:bool; column:int ); { Procedure has to sort the database }
 var
 	localLOW, localHIGH, i, position:uint;
+	test:int;
 	temp:array[LOW..HIGH] of int;
 Begin
 	ClearEmptyRecords( Database );
 
 	i := 0;
-	temp[i] := LOW;
-	temp[i+1] := FindRealHighValue( Database );
-	i := i + 2;
+	localLOW := LOW;
+	localHIGH := FindRealHighValue( Database );
 
+	position := Split( Database, localLOW, localHIGH, order, column );
+	
 	while ( i >= 0 ) do
 	begin
-		localLOW := temp[i];
-		localHIGH := temp[i+1];
-		i := i - 2;
-
-		position := Split( Database, localLOW, localHIGH, order, column );
+		ShowDatabase( Database );
 
 		if ( position - 1 > localLOW ) then
 		begin
-			temp[i] := localLOW;
-			temp[i+1] := position - 1;
-			i := i + 2;
+			temp[PostInc(i, 1)] := localLOW;
+			temp[PostInc(i, 1)] := position - 1;
 		end;
-		
+
 		if ( position + 1 < localHIGH ) then
 		begin
-			temp[i] := position + 1;
-			temp[i+1] := localHIGH;
-			i := i + 2;
+			temp[PostInc(i, 1)] := position + 1;
+			temp[PostInc(i, 1)] := localHIGH;
 		end;
+
+		localHIGH := temp[PreDec(i, 1)];
+		writeln('i=',i,' temp=',temp[i]);
+		localLOW := temp[PreDec(i, 1)];
+		writeln('i=',i,' temp=',temp[i]);
+
+		writeln('_pDec localHIGH=',localHIGH);
+		writeln('_pDec localLOW=',localLOW);
+		write('i=',i,' temp=');
+		for test := 0 to i+1 do
+			write(temp[test],',');
+		readln;
+
+		position := Split( Database, localLOW, localHIGH, order, column );
 	end;
 { sorting after removing non-existent elements }
 {
@@ -378,3 +436,4 @@ End.
 	split type and functions/procs definitions to units
 	split certain functions with algorithms to different units
 }
+
