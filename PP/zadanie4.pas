@@ -1,3 +1,4 @@
+{ TL;DR move image with h,j,k,l,u,i,n,m }
 program zadanie4;
 
 uses keyboard, crt;
@@ -21,7 +22,6 @@ var
 	ptrTableWidth:uint;
 	ptrTableHeight:uint;
 
-
 procedure ClearTable();
 var
 	i:uint;
@@ -30,9 +30,6 @@ Begin
 	begin
 		( ptrTable + i-1 )^ := '.';
 	end;
-	( ptrTable + (ptrTableWidth * ptrTableHeight)-1 )^ := 'S';
-	
-	( ptrTable + ptrTableWidth * ptrTableHeight - ptrTableWidth )^ := 'N';
 End; { End of InitializeTable }
 
 procedure ShowTable();
