@@ -12,7 +12,7 @@ Znaczniki=0
 Adres=8
 Kod=8
 [Rozkazy]
-Liczba=22
+Liczba=24
 Nazwa1=hlt
 Nazwa2=add
 Nazwa3=sub
@@ -35,48 +35,50 @@ Nazwa19=spv
 Nazwa20=apv
 Nazwa21=cpv
 Nazwa22=lpa
-[HLT]
+Nazwa23=rd
+Nazwa24=wd
+[hlt]
 Linie=4
 Linia1=ROZKAZ HLT;
 Linia2=Argumenty 0;
 Linia3=czyt wys wei il;
 Linia4=stop;
-[ADD]
+[add]
 Linie=5
 Linia1=// (Ak)+((Ad))->Ak
 Linia2=ROZKAZ ADD;
 Linia3=czyt wys wei il;
 Linia4=wyad wea;
 Linia5=czyt wys weja dod weak wyl wea;
-[SUB]
+[sub]
 Linie=5
 Linia1=// (Ak)-((Ad))->Ak
 Linia2=ROZKAZ SUB;
 Linia3=czyt wys wei il;
 Linia4=wyad wea;
 Linia5=czyt wys weja ode weak wyl wea;
-[CPY]
+[cpy]
 Linie=5
 Linia1=// ((Ad))->Ak
 Linia2=ROZKAZ CPY;
 Linia3=czyt wys wei il;
 Linia4=wyad wea;
 Linia5=czyt wys weja przep weak wyl wea;
-[LD]
+[ld]
 Linie=5
 Linia1=// (Ak)->(Ad)
 Linia2=ROZKAZ LD;
 Linia3=czyt wys wei il;
 Linia4=wyad wea wyak wes;
 Linia5=pisz wyl wea;
-[JMP]
+[jmp]
 Linie=5
 Linia1=// skok bezwarunkowy
 Linia2=ROZKAZ JMP;
 Linia3=Argumenty 1;
 Linia4=czyt wys wei il;
 Linia5=wyad wea wel;
-[JG]
+[jg]
 Linie=6
 Linia1=// skok gdy (AK) < 0
 Linia2=ROZKAZ JG;
@@ -84,7 +86,7 @@ Linia3=czyt wys wei il;
 Linia4=JEŻELI Z TO @ujemne GDY NIE @dodatnie;
 Linia5=@ujemne wyad wea wel KONIEC;
 Linia6=@dodatnie wyl wea;
-[JZ]
+[jz]
 Linie=6
 Linia1=// skok gdy (AK) = 0
 Linia2=ROZKAZ JZ;
@@ -92,20 +94,20 @@ Linia3=czyt wys wei il;
 Linia4=JEŻELI ZAK TO @zero GDY NIE @notzero;
 Linia5=@zero wyad wea wel KONIEC;
 Linia6=@notzero wyl wea;
-[JNZ]
+[jnz]
 Linie=5
 Linia1=ROZKAZ JNZ;
 Linia2=czyt wys wei il;
 Linia3=JEŻELI ZAK TO @zero GDY NIE @notzero;
 Linia4=@notzero wyad wea wel KONIEC;
 Linia5=@zero wyl wea;
-[GAD]
+[gad]
 Linie=4
 Linia1=ROZKAZ GAD;
 Linia2=czyt wys wei il;
 Linia3=wyad as weja przep weak;
 Linia4=wyl wea;
-[GNO]
+[gno]
 Linie=7
 Linia1=ROZKAZ GNO;
 Linia2=Argumenty 2;
@@ -114,27 +116,27 @@ Linia4=wyad as weja przep weak;
 Linia5=wyl wea;
 Linia6=czyt wys wey il;
 Linia7=wyl wea;
-[MVX]
+[mvx]
 Linie=5
 Linia1=ROZKAZ MVX;
 Linia2=Argumenty 1;
 Linia3=czyt wys wei il;
 Linia4=wyad wea;
 Linia5=czyt wys wex;
-[MVY]
+[mvy]
 Linie=5
 Linia1=ROZKAZ MVY;
 Linia2=Argumenty 1;
 Linia3=czyt wys wei il;
 Linia4=wyad wea;
 Linia5=czyt wys wey;
-[AAX]
+[aax]
 Linie=4
 Linia1=ROZKAZ AAX;
 Linia2=Argumenty 0;
 Linia3=czyt wys wei il;
 Linia4=wyx weja dod weak;
-[AAY]
+[aay]
 Linie=4
 Linia1=ROZKAZ AAY;
 Linia2=Argumenty 0;
@@ -148,7 +150,7 @@ Linia3=czyt wys wei il;
 Linia4=wyad wea;
 Linia5=czyt wys weja ode weak;
 Linia6=JEŻELI Z TO @lesser GDY NIE @greater; 
-Linia7=@greater czyt wys weja przep weak wyl wea KONIEC;         
+Linia7=@greater czyt wys weja przep weak wyl wea KONIEC;          
 Linia8=@lesser czyt wys weja dod weak wyl wea;
 [max]
 Linie=9
@@ -158,7 +160,7 @@ Linia3=czyt wys wei il;
 Linia4=wyad wea;
 Linia5=czyt wys weja ode weak;
 Linia6=JEŻELI Z TO @greater GDY NIE @lesser;
-Linia7=@greater czyt wys weja przep weak wyl wea KONIEC;        
+Linia7=@greater czyt wys weja przep weak wyl wea KONIEC;         
 Linia8=@lesser czyt wys weja dod weak wyl wea;
 Linia9=
 [shl]
@@ -204,3 +206,23 @@ Linia4=wyad wea;
 Linia5=czyt wys as wea;
 Linia6=wyak wes pisz wyl wea;
 Linia7=pisz wyl wea;
+[rd]
+Linie=10
+Linia1=ROZKAZ RD;
+Linia2=Argumenty 1;
+Linia3=czyt wys wei il;
+Linia4=start;
+Linia5=wyg weja przep weak;
+Linia6=JEŻELI ZAK TO @empty GDY NIE @ready;
+Linia7=@empty wyl wea KONIEC;
+Linia8=@ready wyrb weja przep weak;
+Linia9=wyl wea;
+Linia10=
+[wd]
+Linie=6
+Linia1=ROZKAZ WD; // Write data
+Linia2=Argumenty 1;
+Linia3=czyt wys wei il;
+Linia4=start wyak werb wyl wea;
+Linia5=
+Linia6=
