@@ -12,7 +12,7 @@ Znaczniki=0
 Adres=8
 Kod=8
 [Rozkazy]
-Liczba=24
+Liczba=26
 Nazwa1=hlt
 Nazwa2=add
 Nazwa3=sub
@@ -37,6 +37,8 @@ Nazwa21=cpv
 Nazwa22=lpa
 Nazwa23=rd
 Nazwa24=wd
+Nazwa25=and
+Nazwa26=rds
 [hlt]
 Linie=4
 Linia1=ROZKAZ HLT;
@@ -226,3 +228,23 @@ Linia3=czyt wys wei il;
 Linia4=start wyak werb wyl wea;
 Linia5=
 Linia6=
+[and]
+Linie=5
+Linia1=ROZKAZ AND;
+Linia2=czyt wys wei il;
+Linia3=wyad wea;
+Linia4=wys weja i weak;
+Linia5=wyl wea;
+[rds]
+Linie=11
+Linia1=ROZKAZ RDS; // Read data stream
+Linia2=Argumenty 1;
+Linia3=czyt wys wei il; 
+Linia4=start; 
+Linia5=@empty;
+Linia6=wyg weja przep weak;
+Linia7=JEŻELI ZAK TO @empty GDY NIE @ready;
+Linia8=@ready wyrb weja przep weak;
+Linia9=wyl wea;
+Linia10=
+Linia11=
